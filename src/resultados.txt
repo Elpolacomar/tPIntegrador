@@ -1,1 +1,4 @@
 Argentina,3,2,Arabia Saudita
+Polonia,2,2,México
+Arabia Saudita,1,1,Polonia
+México,0,4,Argentina

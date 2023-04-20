@@ -1,12 +1,5 @@
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Scanner;
-
-import static java.lang.Integer.parseInt;
-
 public class Pronostico {
+
     private String nombre;
 
     private String fase;
@@ -18,6 +11,7 @@ public class Pronostico {
     private Integer resultado;
 
     private int aciertos;
+
 
     public Pronostico(String nombre, String fase, String nroRonda, String equipo1, String equipo2, String resultado) {
         this.nombre = nombre;
@@ -99,7 +93,7 @@ public class Pronostico {
                 " de la ronda " + nroRonda +
                 " entre " + equipo1 +
                 " vs. " + equipo2 +
-                ", " + resultadoPronosticosString();
+                ", " + resultado ;
     }
 
     public void setAciertos(int aciertos) {
@@ -107,4 +101,3 @@ public class Pronostico {
     }
 
 }
-

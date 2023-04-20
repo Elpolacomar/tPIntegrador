@@ -4,16 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="118fe479-6037-4fff-ad85-26c6dd819b55" name="Changes" comment="">
+    <list default="true" id="118fe479-6037-4fff-ad85-26c6dd819b55" name="Changes" comment="Entrega 2 y Entrega 3 Parcial">
+      <change afterPath="$PROJECT_DIR$/src/Participante.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PartidoXFase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PartidoXRonda.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Equipo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Equipo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Partido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Partido.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pronostico.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pronostico.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ResultadoEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ResultadoEnum.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Ronda.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Ronda.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pronostico.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/pronostico.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/resultados.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/resultados.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,12 +47,15 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/omard/IdeaProjects/tPIntegrador"
+    "last_opened_file_path": "C:/Users/omard/IdeaProjects/consultaBD-master"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="partido" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\omard\IdeaProjects\tPIntegrador" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -65,7 +67,19 @@
       <option name="presentableId" value="Default" />
       <updated>1679176974899</updated>
     </task>
+    <task id="LOCAL-00001" summary="Entrega 2 y Entrega 3 Parcial">
+      <created>1681849026286</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1681849026286</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Entrega 2 y Entrega 3 Parcial" />
+    <option name="LAST_COMMIT_MESSAGE" value="Entrega 2 y Entrega 3 Parcial" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

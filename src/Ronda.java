@@ -1,14 +1,15 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Ronda {
 
     private Integer ronda;
 
-    private List<Partido> partidos;
+    private List<Partido> partidos= new ArrayList<>();
 
     public static Integer count = 1;
-    public Ronda(String fase, Integer ronda, List<Partido> partidos) {
-        this.ronda = ronda;
+
+    public Ronda(List<Partido> partidos) {
         this.partidos = partidos;
     }
 

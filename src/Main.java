@@ -1,50 +1,18 @@
-import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
-
-import static java.lang.Integer.parseInt;
 
 public class Main {
     public static void main(String[] args) {
 
-        List<Ronda> resultados = leerResultados();
-        System.out.println("---------------------------------------------");
+        List<Partido> resultados = leerResultados();
         List<Pronostico> pronosticos = leerPronosticos();
 
-        /*int[] puntos = new int[pronosticos.size()];
-        int i = 0;
-        for (List<Pronostico> pronosticosUsuario : pronosticos.indexOf(args[5])) {
-            int puntosUsuario = 0;
-            boolean aciertosCompletos = true;
-            for (int j = 0; j < resultados.size(); j++) {
-                Partido partido = resultados.get(j);
-                Pronostico pronostico = pronosticosUsuario.get(j);
-                if (pronostico.aciertaResultado(partido)) {
-                    puntosUsuario++;
-                } else {
-                    aciertosCompletos = false;
-                }
-            }
-            if (aciertosCompletos) {
-                puntosUsuario += 5; // puntos extra por acertar todos los resultados de la ronda
-            }
-            puntos[i++] = puntosUsuario;
-        }*/
-
+        compararResultados(pronosticos, resultados);
     }
 
-    // Va a devolver una Lista con un arreglo de String que va a contener:
-    // Posicion 0: Ronda
-    // Posicion 1: Fase
-    // Posicion 2: Nombre equipo 1
-    // Posicion 3: Nombre equipo 2
-    // Posicion 4: Goles equipo 1
-    // Posicion 5: Goles equipo 2
-    public static List<Ronda> leerResultados() {
-        List<Ronda> resultados = new ArrayList<>();
+    public static List<Partido> leerResultados() {
+        List<Partido> resultados = new ArrayList<>();
 
         // Cargamos el Driver
         try {
@@ -53,13 +21,13 @@ public class Main {
             System.out.println("Error cargando el driver");
         }
 
+        List<Partido> partidosRonda =new ArrayList<>();
         try {
             // Creamos la conexión
             Connection con = DriverManager.getConnection(
                     "jdbc:mysql://sql10.freemysqlhosting.net:3306/sql10612293",
                     "sql10612293", "ACwUKDKvbY");
             Statement stmt = con.createStatement();
-            List<Partido> partidosRonda = new ArrayList<>();
             // El Query que vamos a correr
             ResultSet rs = stmt.executeQuery("SELECT FASE, RONDA, E1.EQUIPO AS EQUIPO_1, E2.EQUIPO AS EQUIPO_2, GOLES_1, GOLES_2 FROM RESULTADOS R JOIN EQUIPOS E1 on R.ID_EQUIPO_1 = E1.ID_EQUIPO JOIN EQUIPOS E2 on R.ID_EQUIPO_2 = E2.ID_EQUIPO");
             while (rs.next()) {
@@ -70,9 +38,9 @@ public class Main {
                 fila[3] = rs.getString("EQUIPO_2");
                 fila[4] = rs.getString("GOLES_1");
                 fila[5] = rs.getString("GOLES_2");
-                Partido partido = new Partido(fila[0],fila[1],fila[2],fila[3],fila[4],fila[5]);
-                partidosRonda.add(partido);
-                System.out.println(partido);
+                Partido partido = new Partido(fila[0], fila[1], fila[2], fila[3], fila[4], fila[5]);
+                resultados.add(partido);
+
             }
             con.close();
         } catch (SQLException e) {
@@ -82,13 +50,6 @@ public class Main {
     }
 
 
-    // Va a devolver una Lista con un arreglo de String que va a contener:
-    // Posicion 0: Nombre de la persona
-    // Posicion 1: Fase
-    // Posicion 2: Ronda
-    // Posicion 3: Nombre equipo 1
-    // Posicion 4: Nombre equipo 2
-    // Posicion 5: Ganador
     public static List<Pronostico> leerPronosticos() {
         List<Pronostico> pronosticos = new ArrayList<>();
 
@@ -105,7 +66,6 @@ public class Main {
                     "jdbc:mysql://sql10.freemysqlhosting.net:3306/sql10612293",
                     "sql10612293", "ACwUKDKvbY");
             Statement stmt = con.createStatement();
-            List<Pronostico> pronosticoPartido = new ArrayList<>();
             // El Query que vamos a correr
             ResultSet rs = stmt.executeQuery("SELECT NOMBRE, FASE, RONDA, E1.EQUIPO AS EQUIPO_1, E2.EQUIPO AS EQUIPO_2, GANADOR FROM PRONOSTICOS P JOIN RESULTADOS R on P.ID_RESULTADO = R.ID_RESULTADO JOIN EQUIPOS E1 on R.ID_EQUIPO_1 = E1.ID_EQUIPO JOIN EQUIPOS E2 on R.ID_EQUIPO_2 = E2.ID_EQUIPO");
             while (rs.next()) {
@@ -116,16 +76,179 @@ public class Main {
                 fila[3] = rs.getString("EQUIPO_1");
                 fila[4] = rs.getString("EQUIPO_2");
                 fila[5] = rs.getString("GANADOR");
-                Pronostico pronostico;
-                pronostico = new Pronostico(fila[0], fila[1], fila[2], fila[3], fila[4], fila[5]);
-                pronosticoPartido.add(pronostico);
-                System.out.println(pronostico);
+                Pronostico pronostico = new Pronostico(fila[0], fila[1], fila[2], fila[3], fila[4], fila[5]);
+                pronosticos.add(pronostico);
+
             }
             con.close();
         } catch (SQLException e) {
             System.out.println("Error con SQL");
         }
         return pronosticos;
+
     }
 
+    public static Participante[] compararResultados(List<Pronostico> pronosticos, List<Partido> resultados){
+
+        Integer cantidadParticipantes= pronosticos.size() / resultados.size();
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("|                       Cantidad de Participantes : "+ cantidadParticipantes + "                         |");
+        System.out.println("-------------------------------------------------------------------------------");
+
+        List<Participante> participantes = new ArrayList<>();
+        List<Partido> partidos= new ArrayList<>();
+        for (int i = 0; i < cantidadParticipantes; i++){
+            Integer count= 0;
+            String nombre = pronosticos.get(resultados.size() * i).getNombre();
+            for (int j=0; j< resultados.size(); j++ ){
+                int resultadoParticipante = pronosticos.get((resultados.size() * i)+j).getResultado();
+                int resultadopartido = resultados.get(j).getResultadoPartido();
+                if(resultadoParticipante == resultadopartido){
+                    Partido partido= new Partido(resultados.get(j).getFase(), resultados.get(j).getRonda(), resultados.get(j).getResultadoPartido());
+                    partidos.add(partido);
+                    count++;
+                }
+            }
+            Participante participante= new Participante(nombre, count, partidos);
+            participantes.add(participante);
+        }
+        System.out.println(participantes);
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("|                                 ordenados por puntaje                       |");
+        System.out.println("-------------------------------------------------------------------------------");
+
+        Participante[] arrayOrdenado= new Participante[cantidadParticipantes];
+        for (int i =0; i < cantidadParticipantes; i++){
+            arrayOrdenado[i]=participantes.get(i);
+        }
+        for (int j = 0; j < (arrayOrdenado.length-1); j++) {
+            for (int i = 0; i < (arrayOrdenado.length -1); i++) {
+                if (arrayOrdenado[i].getPuntos() < arrayOrdenado[i + 1].getPuntos()) {
+                    Participante auxiliar = arrayOrdenado[i];
+                    arrayOrdenado[i] = arrayOrdenado[i + 1];
+                    arrayOrdenado[i + 1] = auxiliar;
+                }
+            }
+        }
+        for (Participante item: arrayOrdenado
+        ) {
+            System.out.println(item);
+        }
+        System.out.println(" ---------------------------------------- ");
+        /* ver por la fase*/
+        List<PartidoXFase> comparar= List.of(puntosExtraPorFase(pronosticos, resultados));
+
+        for(int i=0; i< arrayOrdenado.length; i++) {
+            int contador = 0;
+            for (int j = 0; j < comparar.size(); j++) {
+                contador = 0;
+                for (int h = 0; h < arrayOrdenado[i].getPuntos(); h++) {
+                    if (arrayOrdenado[i].getPartidos().get(h).getFase().equals(comparar.get(j).getNombre())) {
+                        contador++;
+                    }
+                }
+                System.out.println( "Aciertos por Fase : "+ comparar.get(j).getNombre() + " de " + arrayOrdenado[i].getNombre() + "  " +contador);
+                if (contador >= comparar.get(j).getCantidadDePartidos()){
+                    System.out.println("suma 1 punto");
+                }else{
+                    System.out.println("no alcanza para recibir puntos extra necesita " + comparar.get(j).getCantidadDePartidos() + " aciertos para hacer una Fase perfecta");
+                }
+                System.out.println(" ---------------------------------------- ");
+            }
+        }
+        System.out.println(" ---------------------------------------- ");
+
+
+
+
+
+        puntosExtraPorRonda(pronosticos, resultados);
+
+
+
+
+
+
+        return arrayOrdenado;
+    }
+
+    public static PartidoXFase[] puntosExtraPorFase(List<Pronostico> pronosticos, List<Partido> resultados) {
+
+        /*busco cuantas fases hay*/
+
+        List<String> cantidadDeFases = new ArrayList<>();
+        for (int i = 0; i < resultados.size()-1; i++) {
+            if (i == 0) {
+                cantidadDeFases.add(resultados.get(i).getFase());
+            } else if (!resultados.get(i).getFase().equals(resultados.get(i + 1).getFase())) {
+                cantidadDeFases.add(resultados.get(i+1).getFase());
+            }
+        }
+
+        /*busco cuantos partidos por fase tengo*/
+
+        List<Integer> cantidadDePartidosEnFase = new ArrayList<>();
+        for(int i=0; i < cantidadDeFases.size(); i++){
+            Integer count = 0;
+            for (int j=0; j < resultados.size(); j++){
+                if (cantidadDeFases.get(i).equals(resultados.get(j).getFase())){
+                    count++;
+                }
+            }
+            cantidadDePartidosEnFase.add(count);
+        }
+        PartidoXFase[] partidosXFase= new PartidoXFase[cantidadDeFases.size()];
+        for (int i=0; i< cantidadDeFases.size(); i++){
+            PartidoXFase partidoXFase= new PartidoXFase(cantidadDeFases.get(i), cantidadDePartidosEnFase.get(i));
+            partidosXFase[i]= partidoXFase;
+        }
+
+        for (PartidoXFase item:partidosXFase
+        ) {
+            System.out.println(item);
+        }
+        System.out.println(" ---------------------------------------- ");
+        return partidosXFase;
+    }
+
+    public static void puntosExtraPorRonda(List<Pronostico> pronosticos, List<Partido> resultados){
+        /*cantidad de partidos por ronda*/
+
+        List<String> cantidadDeRondas = new ArrayList<>();
+        for (int i = 0; i < resultados.size()-1; i++) {
+            if (i == 0) {
+                cantidadDeRondas.add(resultados.get(i).getRonda());
+            } else if (!resultados.get(i).getRonda().equals(resultados.get(i + 1).getRonda())) {
+                cantidadDeRondas.add(resultados.get(i+1).getRonda());
+            }
+        }
+
+        /*busco cuantos partidos por Ronda tengo*/
+
+        List<Integer> cantidadDePartidosPorRonda = new ArrayList<>();
+
+        for(int i=0; i < cantidadDeRondas.size(); i++){
+            Integer count = 0;
+            for (int j=0; j < resultados.size(); j++){
+                if (cantidadDeRondas.get(i).equals(resultados.get(j).getRonda())){
+                    count++;
+                }
+            }
+            cantidadDePartidosPorRonda.add(count);
+        }
+
+        PartidoXRonda[] partidosXRonda= new PartidoXRonda[cantidadDeRondas.size()];
+        for (int i=0; i< cantidadDeRondas.size(); i++){
+            PartidoXRonda partidoXRonda= new PartidoXRonda(cantidadDeRondas.get(i), cantidadDePartidosPorRonda.get(i));
+            partidosXRonda[i]= partidoXRonda;
+        }
+
+        for (PartidoXRonda item:partidosXRonda
+        ) {
+            System.out.println(item);
+        }
+
+    }
+
+    /*cierre del main*/
 }

@@ -25,6 +25,12 @@ public class Partido {
 
     private Integer resultadoPartido;
 
+    public Partido(String fase, String ronda, Integer resultadoPartido) {
+        this.fase = fase;
+        this.ronda = ronda;
+        this.resultadoPartido = resultadoPartido;
+    }
+
     public Partido(String fase, String ronda, String equipo1, String equipo2, String golesEquipo1, String golesEquipo2) {
         this.fase = fase;
         this.ronda = ronda;
@@ -107,6 +113,7 @@ public class Partido {
 
     @Override
     public String toString() {
-        return "\n \n Fase: "+fase+"\n " + "Ronda: "+ronda+"\n " +"Partido entre : " + equipo1 + " y " + equipo2 + "\n finalizo " + golesEquipo1 + " a " + golesEquipo2 + " \n resultado : "+ getResultadoPartido() +" "+ resultadoPartidoString();
+        return
+                "fase " + fase + " ronda " + ronda + ", resultado " + getResultadoPartido();
     }
 }
